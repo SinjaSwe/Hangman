@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Hangman
@@ -13,16 +14,15 @@ namespace Hangman
             string[] words = { "house", "cat", "train", "school", "lamp", "apple", "elephant", "pillow", "tiger", "nerd", "computer", "flower", "mississippi" };
             char enteredLetter;
             int chances = 10;
+            //string whatsTheWord = wordGenerator.Next(0, words.Length)];
 
-            //while (keepLooping)
+            while (keepLooping)
 
             {
                 Console.WriteLine("Welcome to Hangman.");
                 Console.WriteLine("Try and guess the following random word");
-
-
-                
-                Console.WriteLine("------Menu------");
+                           
+                Console.WriteLine("------Options------");
                 Console.WriteLine("1: Try a letter");
                 Console.WriteLine("2: Try whole word");
                 Console.WriteLine("3: Exit");
@@ -32,11 +32,12 @@ namespace Hangman
                 switch (selection)
                 {
                     case 1:
-                        ;// What happenes in the enter 1
+                        AskForLetter(); // What happenes in the enter 1
                         break;
 
                     case 2:
-                        ; //what happens if they enter 2
+                        AskForWord(); //what happens if they enter 2
+                        break;
 
                     case 3:
                         keepLooping = false; //they wish to exit
@@ -50,10 +51,19 @@ namespace Hangman
 
             }
 
-                if (lettersSubmitted.Contains(enteredLetter))
+                if (words[wordToGuess].Contains<char>(
+                lettersSubmitted.Contains(enteredLetter))
                 {
-                    // letter already tried
+                    Console.WriteLine("You already tried {0}, guess a different letter");
                 }
+                if else (RandomWord.Contains(enteredLetter))
+                {
+                    Console.WriteLine("Well done, you guessed a correct letter");
+                    // capture correct letter in array
+                }
+                if (RandomWord)
+
+
 
 
                 char letterSelected = AskForLetter(); //create a method here
@@ -63,21 +73,22 @@ namespace Hangman
              
             static void RandomWord()
             {
-                Random wordGenerator = new Random();
-                int index = wordGenerator.Next(words.Length);
+                Random wordToGuess = new Random();
+                int index = wordToGuess.Next(words.Length);
                 Console.WriteLine($"Random word is {words[index]}");
             }
 
             static void AskForLetter ()
-            {       
-                do
-                {
-                    Console.Write("Please enter a letter: ");
-                }
-
+            {
+               Console.Write("Please enter a letter: ");
+                char letter = char.Parse(Console.ReadLine()); 
             }
 
             static void AskForWord ()
+            {
+                Console.WriteLine("Please enter a word: ");
+                string word = string.Parse(Console.ReadLine());
+            }
 
             {
 
