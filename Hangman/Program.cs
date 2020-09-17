@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
@@ -9,37 +10,30 @@ namespace Hangman
     {
         static void Main(string[] args)
         {
-  
+
+
             bool keepLooping = true;
-            string[] words = { "house", "cat", "train", "school", "lamp", "apple", "elephant", "pillow", "tiger", "nerd", "computer", "flower", "mississippi" };
-            char enteredLetter;
-            int chances = 10;
+
+            //int chances = 10;
             //string whatsTheWord = wordGenerator.Next(0, words.Length)];
 
             while (keepLooping)
 
             {
                 Console.WriteLine("Welcome to Hangman.");
-                Console.WriteLine("Try and guess the following random word");
-                           
                 Console.WriteLine("------Options------");
-                Console.WriteLine("1: Try a letter");
-                Console.WriteLine("2: Try whole word");
-                Console.WriteLine("3: Exit");
+                Console.WriteLine("1: Play");
+                Console.WriteLine("2: Exit");
 
                 double selection = AskForNumber();
 
                 switch (selection)
                 {
                     case 1:
-                        AskForLetter(); // What happenes in the enter 1
+                        PlayHangman(); // Please 1 to play
                         break;
 
                     case 2:
-                        AskForWord(); //what happens if they enter 2
-                        break;
-
-                    case 3:
                         keepLooping = false; //they wish to exit
                         Console.WriteLine("Thank you for playing Hangman!");
                         break;
@@ -49,61 +43,7 @@ namespace Hangman
                         break;
                 }
 
-            }
 
-                if (words[wordToGuess].Contains<char>(
-                lettersSubmitted.Contains(enteredLetter))
-                {
-                    Console.WriteLine("You already tried {0}, guess a different letter");
-                }
-                if else (RandomWord.Contains(enteredLetter))
-                {
-                    Console.WriteLine("Well done, you guessed a correct letter");
-                    // capture correct letter in array
-                }
-                if (RandomWord)
-
-
-
-
-                char letterSelected = AskForLetter(); //create a method here
-                string wordSelected = AskForWord(); // create a method here
-               
-            
-             
-            static void RandomWord()
-            {
-                Random wordToGuess = new Random();
-                int index = wordToGuess.Next(words.Length);
-                Console.WriteLine($"Random word is {words[index]}");
-            }
-
-            static void AskForLetter ()
-            {
-               Console.Write("Please enter a letter: ");
-                char letter = char.Parse(Console.ReadLine()); 
-            }
-
-            static void AskForWord ()
-            {
-                Console.WriteLine("Please enter a word: ");
-                string word = string.Parse(Console.ReadLine());
-            }
-
-            {
-
-            }
-
-            
-            
-            static void lettersSubmitted ()
-            {
-                StringBuilder stringbuilder = new StringBuilder(lettersSubmitted.Lenght);
-                for (int i = 0; i < lettersSubmitted.Lenght; i++)
-                    showUser.Append('_');      
-     
-                List<char> lettersInWord = new List<char>();
-                List<char> lettersNotInWord = new List<char>();
             }
 
             static double AskForNumber()
@@ -147,24 +87,92 @@ namespace Hangman
                 return number;
 
             }
-            /*
- * Method
-    Is the letter present in the word Yes
 
-    Method ö randowm work from array
+            static void PlayHangman()
 
-// use Random to select a random word from the array in hangman
-
-Random randomWord = new Random();
-for (string i = 0; i < 10; i++)
-{
-    Console.WriteLine(randomWord.Next(1, 10))
-
-}
-*/
+            {
+                bool won = false;
+                int guesses = 0;
+                int noOfGuesses = 10;
+                                               
+                string[] arrayOfWords = { "house", "cat", "train", "school", "lamp", "apple", "elephant", "pillow", "tiger", "nerd", "computer", "flower", "mississippi" }; // my secret word list
+                int choice = new Random().Next(arrayOfWords.Length);
+                Console.WriteLine("The word is: " + arrayOfWords[choice]);                                   
 
 
 
-        }
+                StringBuilder hiddenLetters = new StringBuilder();
+                for (int i = 0; i < (arrayOfWords[choice]).Length; i++)
+                {
+                    hiddenLetters.Append('-');
+                }
+              
+                string enteredLetter = String.Empty;
+                string usedLetters = String.Empty;
+                
+
+                while (guesses < noOfGuesses && !won)
+                {
+                    Console.WriteLine("Enter a letter: ");
+                    enteredLetter = Console.ReadLine();
+                    //guess = usedLetters[0]; // array of tried letters
+                                        
+                    guesses++; // add one for every guess
+                    
+                    if (usedLetters.Contains(enteredLetter))
+                    {
+                        Console.WriteLine("You already tried {0}, guess a different letter");
+                        Console.WriteLine("Number of guesses left: " + (noOfGuesses - guesses));                      
+                    }
+
+                    if ((arrayOfWords[choice]).Contains(enteredLetter))
+                    {
+                        Console.WriteLine("You have choosen well! The letter {} is in the word");
+
+                        for (int x = 0; x < (arrayOfWords[choice]).Length; x++)
+                        {
+                            if ((arrayOfWords[choice])[x] == guess )
+                            {
+                                hiddenLetters.Append('-');
+                            }
+                        }                      
+
+                     }
+
+                    else
+
+                    {
+                        Console.WriteLine("You have choosen badly. The letter {0} is not in the word");
+                        Console.WriteLine(hiddenLetters.ToString());  
+                    }
+
+                    if ((arrayOfWords[choice]).ToString().Equals(arrayOfWords[choice]))
+                    {
+                        won = true;
+                    }
+
+                    if (won)
+                    {
+                        Console.WriteLine("Fantastic! You won! Go grab a beer.");
+                    }
+                    
+                    else
+
+                    {
+                        Console.WriteLine($"Oh no, you lost! Correct answer is {(arrayOfWords[choice])}");
+                    }
+
+                    Console.Write("Hit a key to try again");
+                    Console.ReadLine();
+                }                   
+                
+            }         
+
+                
+
+         }
+
+ 
+        
     }
 }
