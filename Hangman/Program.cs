@@ -10,12 +10,7 @@ namespace Hangman
     {
         static void Main(string[] args)
         {
-
-
             bool keepLooping = true;
-
-            //int chances = 10;
-            //string whatsTheWord = wordGenerator.Next(0, words.Length)];
 
             while (keepLooping)
 
@@ -42,8 +37,6 @@ namespace Hangman
                         Console.WriteLine("not a valid selection. Please try again.");
                         break;
                 }
-
-
             }
 
             static double AskForNumber()
@@ -94,78 +87,109 @@ namespace Hangman
                 bool won = false;
                 int guesses = 0;
                 int noOfGuesses = 10;
-                                               
-                string[] arrayOfWords = { "house", "cat", "train", "school", "lamp", "apple", "elephant", "pillow", "tiger", "nerd", "computer", "flower", "mississippi" }; // my secret word list
-                int choice = new Random().Next(arrayOfWords.Length);
-                Console.WriteLine("The word is: " + arrayOfWords[choice]);                                   
+                string wordToGuess;
+
+                //char guess;
+                //string hiddenLetters;
+
+                string[] arrayOfWords = { "house", "train", "school", "lamp", "apple", "elephant", "pillow", "tiger", "nerd", "computer", "flower", "mississippi" };
+
+                Random stringRandom = new Random();
+                int random = stringRandom.Next(arrayOfWords.Length);
+                wordToGuess = Convert.ToString(arrayOfWords[random]);                                            
+                Console.WriteLine($"Randomly selected word is {wordToGuess}");
+                string[] allLettersTried;
+
+                //1.
+                
+                //2. Fix Loop
+
+                //3. Show part filled word
 
 
+                //string correctGuesses; 
 
-                StringBuilder hiddenLetters = new StringBuilder();
-                for (int i = 0; i < (arrayOfWords[choice]).Length; i++)
-                {
-                    hiddenLetters.Append('-');
-                }
-              
                 string enteredLetter = String.Empty;
                 string usedLetters = String.Empty;
                 
-
                 while (guesses < noOfGuesses && !won)
                 {
                     Console.WriteLine("Enter a letter: ");
                     enteredLetter = Console.ReadLine();
-                    //guess = usedLetters[0]; // array of tried letters
-                                        
-                    guesses++; // add one for every guess
-                    
-                    if (usedLetters.Contains(enteredLetter))
+                    allLettersTried = new string[] { enteredLetter };
+
+                    foreach (var item in allLettersTried)
                     {
-                        Console.WriteLine("You already tried {0}, guess a different letter");
+                        Console.WriteLine("You have tried the following letters:" + item.ToString());
+                    }                    
+
+                    //TO DO TOMORROW
+
+                    // Get it to loop around until each letter is filled
+
+                    //char[] listOfLetters = new char[] { }; // array to capture entered letters
+                    //if length of enteredletter is 1 then its a char
+                    //  else its a string.   and if so, 
+                    //listOfLetters[0] = Convert.ToChar(enteredLetter);
+
+
+                    if (allLettersTried.Contains(enteredLetter))
+                    {
+                        Console.WriteLine("You already tried" +" "+ enteredLetter + ", guess a different letter"); // LETTER NOW POPULATING
                         Console.WriteLine("Number of guesses left: " + (noOfGuesses - guesses));                      
                     }
 
-                    if ((arrayOfWords[choice]).Contains(enteredLetter))
+                    
+
+                    else if (wordToGuess.Contains(enteredLetter))
                     {
-                        Console.WriteLine("You have choosen well! The letter {} is in the word");
+                        Console.WriteLine("You have choosen well! The letter" +""+ enteredLetter +""+ "is in the word");
+                        guesses++; // add one for every guess
 
-                        for (int x = 0; x < (arrayOfWords[choice]).Length; x++)
+                        string[] arrayEnteredLetters; // declared array for correct lettters guessed
+                        arrayEnteredLetters = new string[] { enteredLetter };
+                        Console.WriteLine(arrayEnteredLetters);
+                                               
+                       /* for (int x = 0; x < wordToGuess.Length; x++)
                         {
-                            if ((arrayOfWords[choice])[x] == guess )
+                            if (wordToGuess[x] == guess)
                             {
-                                hiddenLetters.Append('-');
+                                arrayEnteredLetters[x] = guess;
                             }
-                        }                      
+                        }
 
+                        Console.WriteLine(hiddenLetters.ToString()); */
                      }
 
                     else
 
                     {
-                        Console.WriteLine("You have choosen badly. The letter {0} is not in the word");
-                        Console.WriteLine(hiddenLetters.ToString());  
+                        Console.WriteLine("You have choosen badly. The letter" + " "+ enteredLetter + " " + "is not in the word");
+                        //Console.WriteLine(hiddenLetters.ToString());
+                        guesses++; // add one for every guess
+
+                        StringBuilder wrongGuesses = new StringBuilder();
+                        wrongGuesses.Append(enteredLetter); 
                     }
 
-                    if ((arrayOfWords[choice]).ToString().Equals(arrayOfWords[choice]))
+                    if (wordToGuess.ToString().Equals(wordToGuess))
                     {
                         won = true;
-                    }
-
-                    if (won)
-                    {
                         Console.WriteLine("Fantastic! You won! Go grab a beer.");
-                    }
-                    
-                    else
 
-                    {
-                        Console.WriteLine($"Oh no, you lost! Correct answer is {(arrayOfWords[choice])}");
                     }
+                                                         
+                                      
+                }
+                if (!won)
+                {
+                    Console.WriteLine($"Oh no, you lost! Correct answer is {wordToGuess}");
+                }
 
-                    Console.Write("Hit a key to try again");
-                    Console.ReadLine();
-                }                   
-                
+                //Console.Write("Hit a key to try again");
+                Console.ReadLine();
+
+
             }         
 
                 
