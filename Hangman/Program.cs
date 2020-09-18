@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace Hangman
@@ -82,119 +83,216 @@ namespace Hangman
             }
 
             static void PlayHangman()
-
-            {
-                bool won = false;
+            {                
                 int guesses = 0;
-                int noOfGuesses = 10;
+                int noOfTries = 10;
                 string wordToGuess;
-
-                //char guess;
-                //string hiddenLetters;
-
+                string[] allLettersTried;
+                string[] correctEnteredLetters; // declared array for correct lettters guessed
+                correctEnteredLetters = new string[0];
+                string enteredLetter = String.Empty;
+                allLettersTried = new string[0];
+                
+                // Array of Strings
                 string[] arrayOfWords = { "house", "train", "school", "lamp", "apple", "elephant", "pillow", "tiger", "nerd", "computer", "flower", "mississippi" };
 
+                //Random Word Generator
                 Random stringRandom = new Random();
                 int random = stringRandom.Next(arrayOfWords.Length);
-                wordToGuess = Convert.ToString(arrayOfWords[random]);                                            
-                Console.WriteLine($"Randomly selected word is {wordToGuess}");
-                string[] allLettersTried;
+                wordToGuess = Convert.ToString(arrayOfWords[random]);
+                Console.WriteLine($"Randomly selected word is {wordToGuess}");  // only for use in testing 
 
-                //1.
-                
-                //2. Fix Loop
+                List<char> guessedLetters = new List<char>();
+                bool won = false;
 
-                //3. Show part filled word
-
-
-                //string correctGuesses; 
-
-                string enteredLetter = String.Empty;
-                string usedLetters = String.Empty;
-                
-                while (guesses < noOfGuesses && !won)
+                while (guesses < noOfTries && !won)
                 {
-                    Console.WriteLine("Enter a letter: ");
-                    enteredLetter = Console.ReadLine();
-                    allLettersTried = new string[] { enteredLetter };
+                    string wordToDisplay = DisplayWord(guessedLetters, wordToGuess); //call method using list of guessed letter and the hidden word                                      
 
-                    foreach (var item in allLettersTried)
-                    {
-                        Console.WriteLine("You have tried the following letters:" + item.ToString());
-                    }                    
-
-                    //TO DO TOMORROW
-
-                    // Get it to loop around until each letter is filled
-
-                    //char[] listOfLetters = new char[] { }; // array to capture entered letters
-                    //if length of enteredletter is 1 then its a char
-                    //  else its a string.   and if so, 
-                    //listOfLetters[0] = Convert.ToChar(enteredLetter);
-
-
-                    if (allLettersTried.Contains(enteredLetter))
-                    {
-                        Console.WriteLine("You already tried" +" "+ enteredLetter + ", guess a different letter"); // LETTER NOW POPULATING
-                        Console.WriteLine("Number of guesses left: " + (noOfGuesses - guesses));                      
-                    }
-
-                    
-
-                    else if (wordToGuess.Contains(enteredLetter))
-                    {
-                        Console.WriteLine("You have choosen well! The letter" +""+ enteredLetter +""+ "is in the word");
-                        guesses++; // add one for every guess
-
-                        string[] arrayEnteredLetters; // declared array for correct lettters guessed
-                        arrayEnteredLetters = new string[] { enteredLetter };
-                        Console.WriteLine(arrayEnteredLetters);
-                                               
-                       /* for (int x = 0; x < wordToGuess.Length; x++)
-                        {
-                            if (wordToGuess[x] == guess)
-                            {
-                                arrayEnteredLetters[x] = guess;
-                            }
-                        }
-
-                        Console.WriteLine(hiddenLetters.ToString()); */
-                     }
-
-                    else
-
-                    {
-                        Console.WriteLine("You have choosen badly. The letter" + " "+ enteredLetter + " " + "is not in the word");
-                        //Console.WriteLine(hiddenLetters.ToString());
-                        guesses++; // add one for every guess
-
-                        StringBuilder wrongGuesses = new StringBuilder();
-                        wrongGuesses.Append(enteredLetter); 
-                    }
-
-                    if (wordToGuess.ToString().Equals(wordToGuess))
+                    if (!wordToDisplay.Contains("_"))
                     {
                         won = true;
                         Console.WriteLine("Fantastic! You won! Go grab a beer.");
-
                     }
-                                                         
-                                      
+                    else if ((noOfTries - guesses) <= 0)
+                    {
+                        won = true;
+                        Console.WriteLine("Oh no, you lost! The hidden word was:  " + wordToGuess);
+                    }
+                    else
+                    {
+                        GuessLetters(guessedLetters, wordToGuess, wordToDisplay, ref noOfTries);
+                    }
+
                 }
-                if (!won)
+                
+                        
+        /*
+         foreach (var item in allLettersTried)
+        {
+            Console.WriteLine("You have tried the following letters:" + item.ToString());
+        }
+
+        if (allLettersTried.Contains(enteredLetter))
+        {
+            Console.WriteLine("You already tried" + " " + enteredLetter + ", guess a different letter"); // LETTER NOW POPULATING
+            Console.WriteLine("Number of guesses left: " + (noOfTries - guesses));
+        }
+
+        else
+        {
+            allLettersTried = new string[] { enteredLetter };
+
+            if (wordToGuess.Contains(enteredLetter))
+            {
+                Console.WriteLine("You have choosen well! The letter" + "" + enteredLetter + "" + "is in the word");
+                guesses++; // add one for every guess
+                correctEnteredLetters = new string[] { enteredLetter };
+                Console.WriteLine(correctEnteredLetters);
+            }
+
+            else
+            {
+                Console.WriteLine("You have choosen badly. The letter" + " " + enteredLetter + " " + "is not in the word");
+                StringBuilder wrongGuesses = new StringBuilder();
+                wrongGuesses.Append(enteredLetter);
+                   guesses++; // add one for every guess
+            }
+
+        }
+        if (HasWon(correctEnteredLetters, wordToGuess))
+        {
+            won = true;
+            Console.WriteLine("Fantastic! You won! Go grab a beer.");
+        }
+
+
+    }
+    if (!won)
+    {
+        Console.WriteLine($"Oh no, you lost! Correct answer is {wordToGuess}");
+    }
+
+    //Console.Write("Hit a key to try again");*/
+        Console.ReadLine();
+
+
+
+            }
+            
+            static string DisplayWord(List<char> guessedLetters, string wordToGuess)
+            {
+                //Method to display hidden word             
+
+                string displayWord = ""; // empty string to fill 
+                if (guessedLetters.Count == 0)
                 {
-                    Console.WriteLine($"Oh no, you lost! Correct answer is {wordToGuess}");
+                    foreach (char letter in wordToGuess)
+                    {
+                        displayWord += "_ ";
+                    }
+                    return displayWord;
+                }
+                foreach (char letter in wordToGuess)
+                {
+                    bool correctTry = false; 
+                    foreach (char key in guessedLetters)
+                    {
+                        if (key == letter)
+                        {
+                            displayWord += key + " ";
+                            correctTry = true;
+                            break;
+                        }
+                        else
+                        {
+                            correctTry = false;
+                        }
+                    }
+                    if (correctTry == false)
+                    {
+                        displayWord += "_";
+                    }             
+                }
+                return displayWord;
+            }
+
+            static void GuessLetters (List<char> guessedLetters, string wordToGuess, string wordToDisplay, ref int numTriesLeft)
+            {
+                string letters = "";
+                foreach (char letter in guessedLetters)
+                {
+                    letters += " " + letter;
+                }
+                char guessedCharacter; 
+                                 
+                Console.WriteLine("Letters guessed: " + letters);
+                Console.WriteLine("Guesses left: " + numTriesLeft);
+                Console.WriteLine("Enter a letter: ");
+                guessedCharacter = Convert.ToChar(Console.ReadLine());
+                Console.WriteLine(wordToDisplay);
+                string guess = Console.ReadLine();
+                
+                bool match = false;
+
+                for (int i = 0; i < guessedLetters.Count; i++)
+                {
+                    if (guessedLetters.Contains(guessedCharacter))
+                    {
+                        Console.WriteLine("You already tried" + " " + guessedCharacter + ", guess a different letter");
+                        match = true;
+                    }
                 }
 
-                //Console.Write("Hit a key to try again");
-                Console.ReadLine();
+                if (match == false)
+                {
+                    guessedLetters.Add(guessedCharacter);
+                    numTriesLeft -= 1;
+                }
 
+                if (wordToGuess.Contains(guessedCharacter))
 
-            }         
+                {
+                    Console.WriteLine("Well done! The letter " + "" + guessedCharacter + "" + " is contained within the hidden word");
+                }
 
+                else
+                {
+                    Console.WriteLine("You have choosen badly. The letter" + " " + guessedCharacter + " " + "is not in the word");
+                    StringBuilder wrongGuesses = new StringBuilder();
+                    wrongGuesses.Append(guessedCharacter);
+                    //TO DO HOW TO WRITE THIS TO THE CONSOLE.     
+                    //FIX DISPLAY SO There is room between each try
+                    //Correct count of guesses
+                }
+
+                    
                 
 
-         }
+
+
+
+            }
+
+            static bool HasWon(string[] rightEnteredLetters, string hiddenWord)
+            {
+                Console.WriteLine(string.Join("\n", rightEnteredLetters));
+                string newRightEnteredLetters = String.Concat(rightEnteredLetters);
+                Console.WriteLine(newRightEnteredLetters);
+                for (int x = 0; x < hiddenWord.Length; x++)
+                {
+                    if (!newRightEnteredLetters.Contains(hiddenWord[x]))
+                    {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+
+            
+
+        }
 
  
         
