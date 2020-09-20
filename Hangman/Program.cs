@@ -112,16 +112,18 @@ namespace Hangman
                     if (!wordToDisplay.Contains("_"))
                     {
                         won = true;
-                        Console.WriteLine(" "); 
-                        Console.WriteLine("Fantastic! You won! Go grab some wine!. The hidden word was: " +"" + wordToGuess);
+                        Console.WriteLine(" ");
+                        Console.WriteLine("Fantastic! You won! Go grab some wine!. The hidden word was: " + "" + wordToGuess);
                         Console.WriteLine(" "); Replay();
 
                     }
-                    else if ((noOfTries - guesses) <= 0)
+                    
+                    //else if ((noOfTries - guesses) <= 0)
+                    else if (noOfTries <= 1)
                     {
                         won = true;
                         Console.WriteLine(" "); 
-                        Console.WriteLine("Oh no, you lost! The hidden word was:  " + wordToGuess);
+                        Console.WriteLine("Boo hoo! You lost! The hidden word was:  " + wordToGuess);
                         Console.WriteLine(" "); 
                         if (Replay())
                         {
@@ -147,6 +149,7 @@ namespace Hangman
                             noOfTries = 10;
                         }
                     }
+                    //Console.WriteLine("noOfTries: " + noOfTries);
                 }
             }
 
@@ -247,11 +250,14 @@ namespace Hangman
 
                     else
                     {
-                        Console.WriteLine("The letter" + " " + guessedCharacter + " " + "is not in the word");
                         StringBuilder wrongGuesses = new StringBuilder();
-                        wrongGuesses.AppendLine(Convert.ToString(guessedCharacter));
-                        Console.WriteLine("\nYou have  guessed the following wrong letters:" + " " + wrongGuesses);
-                        returnCase = 2;
+                        Console.WriteLine("You have guessed the following wrong letters: " + wrongGuesses.ToString());
+
+                        for (int i = 0; i < wrongGuesses.Length; i++)
+                        {                            
+                            char ch = wrongGuesses[i];
+                            Console.WriteLine(ch);
+                        }
                     }
                 }
                 else if (guess.Length >= 1)
@@ -277,12 +283,11 @@ namespace Hangman
                 return returnCase;
             }
 
-            static string RandomGenerator ()
+            static string RandomGenerator () //Random Word Generator
             {                
                 string[] arrayOfWords = { "house", "train", "school", "lamp", "apple", "elephant", "pillow", "tiger", "nerd", "computer", "lexicon", "mississippi" }; // Array of Strings
                 string wordToGuess;
 
-                //Random Word Generator
                 Random stringRandom = new Random();
                 int random = stringRandom.Next(arrayOfWords.Length);
                 wordToGuess = Convert.ToString(arrayOfWords[random]);
